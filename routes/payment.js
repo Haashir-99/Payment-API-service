@@ -10,7 +10,7 @@ router.post("/createIntent", isAuth, paymentController.paymentIntent);
 
 router.post("/confirm", isAuth, paymentController.confirmPayment)
 
-router.put("/updateStatus", isAuth, paymentController.updatePaymentStatus)
+router.put("/updateStatus/:paymentId", isAuth, paymentController.updatePaymentStatus)
 
 router.get("/status/:paymentId", isAuth, paymentController.paymentStatus) 
 
