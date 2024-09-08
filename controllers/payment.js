@@ -202,7 +202,8 @@ exports.confirmPayment = async (req, res, next) => {
 };
 
 exports.updatePaymentStatus = async (req, res, next) => {
-  const { paymentId, status } = req.body;
+  const paymentId = req.params.paymentId
+  const { status } = req.body;
 
   try {
     if (!paymentId || !status) {
