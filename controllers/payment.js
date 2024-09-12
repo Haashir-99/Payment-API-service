@@ -5,19 +5,20 @@ const mongoose = require("mongoose");
 
 exports.paymentIntent = async (req, res, next) => {
   const userId = req.userId;
-  const { orderId, amount, currency, paymentMethod } = req.body;
+  const { orderId, amount, currency } = req.body;
+  let { paymentMethod } = req.body;
 
   try {
-    if ( !orderId || !amount || !currency || !paymentMethod) {
+    if (!orderId || !amount || !currency || !paymentMethod) {
       let message;
-      if(!orderId){
-        message = "OrderId not provided"
+      if (!orderId) {
+        message = "OrderId not provided";
       } else if (!amount) {
-        message = "amount not provided"
+        message = "amount not provided";
       } else if (!currency) {
-        message = "currency not provided"
+        message = "currency not provided";
       } else if (!paymentMethod) {
-        message = "paymentMethod not provided"
+        message = "paymentMethod not provided";
       }
       const error = new Error(message);
       error.statusCode = 422;
@@ -50,6 +51,8 @@ exports.paymentIntent = async (req, res, next) => {
       payment_method_types: [paymentMethod],
     });
 
+    paymentMethod = "pm_card_visa"; //for test payments
+
     const payment = new Payment({
       userId: userId,
       orderId: orderId,
@@ -74,8 +77,9 @@ exports.paymentIntent = async (req, res, next) => {
 };
 
 exports.confirmPayment = async (req, res, next) => {
-  const { paymentId, paymentMethod } = req.body;
+  const { paymentId } = req.body;
   const email = req.email;
+  const userId = req.userId;
 
   try {
     if (!paymentId) {
@@ -84,7 +88,12 @@ exports.confirmPayment = async (req, res, next) => {
       throw error;
     }
 
-    const payment = await Payment.findById(paymentId);
+    const payment = await Payment.findOne({
+      _id: paymentId,
+      userId: userId,
+    });
+
+    const paymentMethod = payment.paymentMethod;
 
     if (!payment) {
       const error = new Error("Order / Payment not found");
@@ -92,6 +101,7 @@ exports.confirmPayment = async (req, res, next) => {
       throw error;
     }
 
+    // variables for confirmation email
     let templateId = 5;
     let subject = "Payment Successful";
 
@@ -152,12 +162,18 @@ exports.confirmPayment = async (req, res, next) => {
 };
 
 exports.updatePaymentStatus = async (req, res, next) => {
-  const paymentId = req.params.paymentId
+  const paymentId = req.params.paymentId;
   const { status } = req.body;
 
   try {
     if (!paymentId || !status) {
       const error = new Error("Payment ID / staus not provided");
+      error.statusCode = 400;
+      throw error;
+    }
+
+    if (status !== "completed" && status !== "failed" && status !== "pending" && status !== "refunded" && status !== "awaiting_payment") {
+      const error = new Error("This is not a valid status");
       error.statusCode = 400;
       throw error;
     }
