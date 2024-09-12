@@ -8,8 +8,18 @@ exports.paymentIntent = async (req, res, next) => {
   const { orderId, amount, currency, paymentMethod } = req.body;
 
   try {
-    if (!orderId || !amount || !currency || !paymentMethod) {
-      const error = new Error("Missing entries");
+    if ( !orderId || !amount || !currency || !paymentMethod) {
+      let message;
+      if(!orderId){
+        message = "OrderId not provided"
+      } else if (!amount) {
+        message = "amount not provided"
+      } else if (!currency) {
+        message = "currency not provided"
+      } else if (!paymentMethod) {
+        message = "paymentMethod not provided"
+      }
+      const error = new Error(message);
       error.statusCode = 422;
       throw error;
     }
