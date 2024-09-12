@@ -1,3 +1,5 @@
+const path = require("path");
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -10,6 +12,8 @@ const MONGODB_URI = process.env.DB_CONNECTION_STRING;
 const PORT = process.env.PORT || 5000;
 
 const app = express();
+
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use(bodyParser.json());
 
@@ -25,6 +29,10 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/payment", paymentRoutes);
+
+app.use("/", (req, res, next) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 app.use((error, req, res, next) => {
   console.log(error);
@@ -44,4 +52,3 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
-
