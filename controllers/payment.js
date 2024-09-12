@@ -3,66 +3,6 @@ const stripe = require("stripe")(process.env.STRIPE_KEY);
 const axios = require("axios");
 const mongoose = require("mongoose");
 
-const currencySymbols = {
-  usd: "$", // US Dollar
-  eur: "€", // Euro
-  gbp: "£", // British Pound
-  pkr: "Rs.", // Pakistani Rupee
-  inr: "₹", // Indian Rupee
-  aud: "A$", // Australian Dollar
-  cad: "C$", // Canadian Dollar
-  jpy: "¥", // Japanese Yen (although not divisible by 100, yen is an exception since it doesn't use decimal units)
-  cny: "¥", // Chinese Yuan
-  chf: "CHF", // Swiss Franc
-  zar: "R", // South African Rand
-  mxn: "$", // Mexican Peso
-  nzd: "NZ$", // New Zealand Dollar
-  sgd: "S$", // Singapore Dollar
-  hkd: "HK$", // Hong Kong Dollar
-  sek: "kr", // Swedish Krona
-  nok: "kr", // Norwegian Krone
-  dkk: "kr", // Danish Krone
-  brl: "R$", // Brazilian Real
-  rub: "₽", // Russian Ruble
-  krw: "₩", // South Korean Won
-  thb: "฿", // Thai Baht
-  myr: "RM", // Malaysian Ringgit
-  php: "₱", // Philippine Peso
-  pln: "zł", // Polish Zloty
-  czk: "Kč", // Czech Koruna
-  huf: "Ft", // Hungarian Forint
-  try: "₺", // Turkish Lira
-  ils: "₪", // Israeli New Shekel
-  egp: "£", // Egyptian Pound
-  idr: "Rp", // Indonesian Rupiah
-  vnd: "₫", // Vietnamese Dong
-  aed: "د.إ", // UAE Dirham
-  sar: "﷼", // Saudi Riyal
-  qar: "﷼", // Qatari Riyal
-  kwd: "KD", // Kuwaiti Dinar
-  omr: "﷼", // Omani Rial
-  bdt: "৳", // Bangladeshi Taka
-  lkr: "Rs.", // Sri Lankan Rupee
-  ngn: "₦", // Nigerian Naira
-  kes: "KSh", // Kenyan Shilling
-  ghs: "GH₵", // Ghanaian Cedi
-  ars: "$", // Argentine Peso
-  clp: "$", // Chilean Peso
-  cop: "$", // Colombian Peso
-  pen: "S/.", // Peruvian Sol
-  uah: "₴", // Ukrainian Hryvnia
-  ron: "lei", // Romanian Leu
-  bgn: "лв", // Bulgarian Lev
-  hrk: "kn", // Croatian Kuna
-  isl: "kr", // Icelandic Krona
-};
-
-function getCurrencySymbol(currencyCode) {
-  return (
-    currencySymbols[currencyCode.toLowerCase()] || currencyCode.toUpperCase()
-  );
-}
-
 exports.paymentIntent = async (req, res, next) => {
   const userId = req.userId;
   const { orderId, amount, currency, paymentMethod } = req.body;
@@ -339,3 +279,64 @@ exports.allPayments = async (req, res, next) => {
     next(err);
   }
 };
+
+// helper functions
+
+const currencySymbols = {
+  usd: "$", // US Dollar
+  eur: "€", // Euro
+  gbp: "£", // British Pound
+  pkr: "Rs.", // Pakistani Rupee
+  inr: "₹", // Indian Rupee
+  aud: "A$", // Australian Dollar
+  cad: "C$", // Canadian Dollar
+  jpy: "¥", // Japanese Yen (although not divisible by 100, yen is an exception since it doesn't use decimal units)
+  cny: "¥", // Chinese Yuan
+  chf: "CHF", // Swiss Franc
+  zar: "R", // South African Rand
+  mxn: "$", // Mexican Peso
+  nzd: "NZ$", // New Zealand Dollar
+  sgd: "S$", // Singapore Dollar
+  hkd: "HK$", // Hong Kong Dollar
+  sek: "kr", // Swedish Krona
+  nok: "kr", // Norwegian Krone
+  dkk: "kr", // Danish Krone
+  brl: "R$", // Brazilian Real
+  rub: "₽", // Russian Ruble
+  krw: "₩", // South Korean Won
+  thb: "฿", // Thai Baht
+  myr: "RM", // Malaysian Ringgit
+  php: "₱", // Philippine Peso
+  pln: "zł", // Polish Zloty
+  czk: "Kč", // Czech Koruna
+  huf: "Ft", // Hungarian Forint
+  try: "₺", // Turkish Lira
+  ils: "₪", // Israeli New Shekel
+  egp: "£", // Egyptian Pound
+  idr: "Rp", // Indonesian Rupiah
+  vnd: "₫", // Vietnamese Dong
+  aed: "د.إ", // UAE Dirham
+  sar: "﷼", // Saudi Riyal
+  qar: "﷼", // Qatari Riyal
+  kwd: "KD", // Kuwaiti Dinar
+  omr: "﷼", // Omani Rial
+  bdt: "৳", // Bangladeshi Taka
+  lkr: "Rs.", // Sri Lankan Rupee
+  ngn: "₦", // Nigerian Naira
+  kes: "KSh", // Kenyan Shilling
+  ghs: "GH₵", // Ghanaian Cedi
+  ars: "$", // Argentine Peso
+  clp: "$", // Chilean Peso
+  cop: "$", // Colombian Peso
+  pen: "S/.", // Peruvian Sol
+  uah: "₴", // Ukrainian Hryvnia
+  ron: "lei", // Romanian Leu
+  bgn: "лв", // Bulgarian Lev
+  hrk: "kn", // Croatian Kuna
+  isl: "kr", // Icelandic Krona
+};
+function getCurrencySymbol(currencyCode) {
+  return (
+    currencySymbols[currencyCode.toLowerCase()] || currencyCode.toUpperCase()
+  );
+}
