@@ -130,7 +130,7 @@ exports.confirmPayment = async (req, res, next) => {
     const trackingLink = "https://sampleTrackingLink/orderId.com";
     const supportEmail = "sampleSupport@email.com";
 
-    await axios.post("http://localhost:4000/api/mail/send-transactional", {
+    await axios.post("https://notification-service-amber.vercel.app/api/mail/send-transactional", {
       recipient: {
         email: email,
         name: name,
